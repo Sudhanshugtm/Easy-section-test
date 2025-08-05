@@ -217,33 +217,6 @@
             font-size: 13px;
         }
         
-        /* View Links */
-        .view-links {
-            display: flex;
-            gap: 12px;
-            padding: 12px 20px;
-            background-color: #ffffff;
-            border-bottom: 1px solid #eaecf0;
-        }
-        
-        .view-link {
-            color: #36c;
-            text-decoration: none;
-            font-size: 13px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        
-        .view-link:hover {
-            text-decoration: underline;
-        }
-        
-        .view-link svg {
-            width: 16px;
-            height: 16px;
-            fill: currentColor;
-        }
         
         /* Footer Info */
         .footer-info {
@@ -377,20 +350,6 @@
         More details
     </div>
     
-    <div class="view-links">
-        <a href="https://en.wikipedia.org/wiki/John_Stith_Pemberton" class="view-link" target="_blank">
-            <svg viewBox="0 0 16 16">
-                <path d="M8 1a7 7 0 100 14A7 7 0 008 1zM3.5 8a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0z"/>
-            </svg>
-            View article in English
-        </a>
-        <a href="https://hi.wikipedia.org/wiki/John_Stith_Pemberton" class="view-link" target="_blank">
-            <svg viewBox="0 0 16 16">
-                <path d="M8 1a7 7 0 100 14A7 7 0 008 1zM3.5 8a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0z"/>
-            </svg>
-            View article in Hindi
-        </a>
-    </div>
     
     <div class="footer-info">
         <div class="info-section">
@@ -501,11 +460,6 @@
         // Load sections when page loads
         loadSections();
         
-        // Update view links
-        const viewLinks = document.querySelectorAll('.view-link');
-        const encodedTitle = encodeURIComponent(articleTitle);
-        viewLinks[0].href = `https://en.wikipedia.org/wiki/${encodedTitle}`;
-        viewLinks[1].href = `https://hi.wikipedia.org/wiki/${encodedTitle}`;
         
         // Navigation functions
         function goBack() {
