@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>अनुभाग - John Stith Pemberton</title>
+    <title>Sections - John Stith Pemberton</title>
     
     <!-- Wikimedia Codex CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@wikimedia/codex@1.5.0/dist/codex.style.css">
@@ -337,7 +337,7 @@
     <div class="header">
         <button class="back-btn" onclick="goBack()">‹</button>
         <div class="header-content">
-            <h1 class="header-title">अनुभाग</h1>
+            <h1 class="header-title">Sections</h1>
             <h2 class="header-subtitle" id="articleTitle">John Stith Pemberton</h2>
             <p class="header-description">Choose a section</p>
             <p class="header-instruction">You'll compare content in both languages</p>
@@ -351,20 +351,20 @@
         </select>
         <span class="language-arrow">→</span>
         <select class="language-select">
-            <option>हिन्दी</option>
+            <option>Hindi</option>
         </select>
     </div>
     
     <div class="sections-container">
         <div class="sections-column">
-            <div class="sections-header">Sections missing in हिन्दी</div>
+            <div class="sections-header">Sections missing in Hindi</div>
             <div class="sections-list" id="missingSections">
                 <!-- Sections will be loaded dynamically -->
             </div>
         </div>
         
         <div class="sections-column">
-            <div class="sections-header">Sections present in हिन्दी</div>
+            <div class="sections-header">Sections present in Hindi</div>
             <div class="sections-list">
                 <div class="empty-state">
                     No sections found
@@ -388,7 +388,7 @@
             <svg viewBox="0 0 16 16">
                 <path d="M8 1a7 7 0 100 14A7 7 0 008 1zM3.5 8a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0z"/>
             </svg>
-            View article in हिन्दी
+            View article in Hindi
         </a>
     </div>
     
@@ -402,7 +402,7 @@
             </div>
             <p class="info-description">
                 Sections are identified automatically and the results are not always accurate.
-                <br><a href="#" class="info-link">अधिक जानिए</a>
+                <br><a href="#" class="info-link">Learn more</a>
             </p>
         </div>
         
@@ -415,7 +415,7 @@
             </div>
             <p class="info-description">
                 Some sections may not appear in the list because their contents are not supported yet.
-                <br><a href="#" class="info-link">अधिक जानिए</a>
+                <br><a href="#" class="info-link">Learn more</a>
             </p>
         </div>
     </div>
@@ -426,7 +426,7 @@
         const articleTitle = urlParams.get('article') || 'John Stith Pemberton';
         
         // Update page title and header
-        document.title = `अनुभाग - ${articleTitle}`;
+        document.title = `Sections - ${articleTitle}`;
         document.getElementById('articleTitle').textContent = articleTitle;
         
         // Load sections with real MediaWiki data
