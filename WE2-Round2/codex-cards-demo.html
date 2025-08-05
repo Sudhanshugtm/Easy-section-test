@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<!-- ABOUTME: This file demonstrates the proper usage of Wikimedia Codex card components with various configurations. -->
+<!-- ABOUTME: It showcases different card types, layouts, and styling options following Codex design system guidelines. -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prototype</title>
+    
+    <!-- Wikimedia Codex CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@wikimedia/codex@1.5.0/dist/codex.style.css">
+    
+    <!-- Additional styling for layout and demonstration -->
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Lato, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 32px;
+            background-color: #f8f9fa;
+        }
+        
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .demo-section {
+            margin-bottom: 48px;
+        }
+        
+        .demo-section h2 {
+            color: #202122;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            border-bottom: 2px solid #a2a9b1;
+            padding-bottom: 8px;
+        }
+        
+        .cards-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 32px;
+            max-width: 600px;
+        }
+        
+        .cards-row {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+            margin-bottom: 32px;
+        }
+        
+        .cards-row > * {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        /* Codex Card component styling */
+        .cdx-card {
+            background-color: #ffffff;
+            border: 1px solid #a2a9b1;
+            border-radius: 2px;
+            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
+            padding: 16px;
+            transition: box-shadow 0.25s ease;
+        }
+        
+        .cdx-card:hover {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+        }
+        
+        .cdx-card--interactive {
+            cursor: pointer;
+        }
+        
+        .cdx-card--interactive:hover {
+            border-color: #0645ad;
+        }
+        
+        .cdx-card__content {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .cdx-card__header {
+            margin-bottom: 12px;
+        }
+        
+        .cdx-card__title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #202122;
+            margin: 0 0 4px 0;
+            line-height: 1.4;
+        }
+        
+        .cdx-card__subtitle {
+            font-size: 13px;
+            color: #72777d;
+            margin: 0;
+            line-height: 1.4;
+        }
+        
+        .cdx-card__text {
+            font-size: 14px;
+            color: #202122;
+            line-height: 1.6;
+            margin: 0 0 12px 0;
+        }
+        
+        .cdx-card__thumbnail {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 2px;
+            margin-bottom: 12px;
+        }
+        
+        .cdx-card__thumbnail--small {
+            width: 80px;
+            height: 80px;
+            float: left;
+            margin: 0 12px 12px 0;
+        }
+        
+        .cdx-card__actions {
+            margin-top: auto;
+            padding-top: 12px;
+            border-top: 1px solid #eaecf0;
+            display: flex;
+            gap: 8px;
+        }
+        
+        .cdx-card__footer {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #eaecf0;
+            font-size: 12px;
+            color: #54595d;
+        }
+        
+        /* Codex Button styling for card actions */
+        .cdx-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #a2a9b1;
+            border-radius: 2px;
+            background-color: #f8f9fa;
+            color: #202122;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 6px 12px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+        
+        .cdx-button:hover {
+            background-color: #ffffff;
+            border-color: #72777d;
+            color: #202122;
+            text-decoration: none;
+        }
+        
+        .cdx-button--action-primary {
+            background-color: #0645ad;
+            border-color: #0645ad;
+            color: #ffffff;
+        }
+        
+        .cdx-button--action-primary:hover {
+            background-color: #0645ad;
+            border-color: #0645ad;
+            opacity: 0.9;
+        }
+        
+        .cdx-button--action-destructive {
+            background-color: #d73333;
+            border-color: #d73333;
+            color: #ffffff;
+        }
+        
+        .cdx-button--action-destructive:hover {
+            background-color: #d73333;
+            border-color: #d73333;
+            opacity: 0.9;
+        }
+        
+        /* Status indicators */
+        .cdx-card--featured {
+            border-left: 4px solid #00af89;
+        }
+        
+        .cdx-card--warning {
+            border-left: 4px solid #ff6900;
+        }
+        
+        .cdx-card--error {
+            border-left: 4px solid #d73333;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 640px) {
+            body {
+                padding: 16px;
+            }
+            
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .cards-row {
+                flex-direction: column;
+            }
+            
+            .cards-row > * {
+                min-width: unset;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <header>
+            <h1 style="color: #202122; font-size: 32px; font-weight: 700; margin-bottom: 8px;">Prototype</h1>
+            <p style="color: #54595d; font-size: 16px; margin-bottom: 32px;">
+                Choose how you'd like to improve your article.
+            </p>
+        </header>
+
+        <!-- Expand with new sections -->
+        <section class="demo-section">
+            <h2>Expand with new sections</h2>
+            <div class="cards-grid">
+                <div class="cdx-card cdx-card--interactive">
+                    <div class="cdx-card__content">
+                        <div class="cdx-card__header">
+                            <h3 class="cdx-card__title">Geography of India</h3>
+                            <p class="cdx-card__subtitle">From Hindi • 85% match</p>
+                        </div>
+                        <p class="cdx-card__text">
+                            India is situated north of the equator between 8°4' north to 37°6' north latitude and 68°7' to 97°25' east longitude. It is the seventh-largest country in the world...
+                        </p>
+                        <div class="cdx-card__actions">
+                            <button class="cdx-button cdx-button--action-primary">Add Section</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cdx-card cdx-card--interactive">
+                    <div class="cdx-card__content">
+                        <div class="cdx-card__header">
+                            <h3 class="cdx-card__title">Economy of India</h3>
+                            <p class="cdx-card__subtitle">From Bengali • 78% match</p>
+                        </div>
+                        <p class="cdx-card__text">
+                            The economy of India is a developing mixed economy. It is the world's fifth-largest economy by nominal GDP and the third-largest by purchasing power parity...
+                        </p>
+                        <div class="cdx-card__actions">
+                            <button class="cdx-button cdx-button--action-primary">Add Section</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cdx-card cdx-card--interactive">
+                    <div class="cdx-card__content">
+                        <div class="cdx-card__header">
+                            <h3 class="cdx-card__title">Demographics of India</h3>
+                            <p class="cdx-card__subtitle">From Tamil • 92% match</p>
+                        </div>
+                        <p class="cdx-card__text">
+                            India is the second most populated country in the world with nearly a fifth of the world's population. According to the 2022 revision of the World Population...
+                        </p>
+                        <div class="cdx-card__actions">
+                            <button class="cdx-button cdx-button--action-primary">Add Section</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Create new pages -->
+        <section class="demo-section">
+            <h2>Create new pages</h2>
+            <div class="cards-grid">
+                <div class="cdx-card cdx-card--interactive">
+                    <div class="cdx-card__content">
+                        <div class="cdx-card__header">
+                            <h3 class="cdx-card__title">Rabindranath Tagore</h3>
+                            <p class="cdx-card__subtitle">Missing in your language • High importance</p>
+                        </div>
+                        <p class="cdx-card__text">
+                            Bengali polymath who was active as a poet, writer, playwright, composer, philosopher, social reformer and painter. He reshaped Bengali literature and music...
+                        </p>
+                        <div class="cdx-card__actions">
+                            <button class="cdx-button cdx-button--action-primary">Create Page</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cdx-card cdx-card--interactive">
+                    <div class="cdx-card__content">
+                        <div class="cdx-card__header">
+                            <h3 class="cdx-card__title">Indian Independence Movement</h3>
+                            <p class="cdx-card__subtitle">Missing in your language • Top importance</p>
+                        </div>
+                        <p class="cdx-card__text">
+                            A series of historic events with the ultimate aim of ending British rule in India. It lasted from 1857 to 1947. The movement spanned a total of 90 years...
+                        </p>
+                        <div class="cdx-card__actions">
+                            <button class="cdx-button cdx-button--action-primary">Create Page</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cdx-card cdx-card--interactive">
+                    <div class="cdx-card__content">
+                        <div class="cdx-card__header">
+                            <h3 class="cdx-card__title">Taj Mahal</h3>
+                            <p class="cdx-card__subtitle">Missing in your language • High importance</p>
+                        </div>
+                        <p class="cdx-card__text">
+                            An ivory-white marble mausoleum on the right bank of the river Yamuna in Agra. It was commissioned in 1632 by the Mughal emperor Shah Jahan...
+                        </p>
+                        <div class="cdx-card__actions">
+                            <button class="cdx-button cdx-button--action-primary">Create Page</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer style="margin-top: 48px; padding-top: 24px; border-top: 2px solid #a2a9b1; text-align: center; color: #54595d;">
+            <p>This prototype showcases Wikimedia Codex card components for article improvement suggestions.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Simple interaction demo for interactive cards
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add click handlers for all buttons
+            const buttons = document.querySelectorAll('.cdx-button');
+            buttons.forEach(button => {
+                if (!button.onclick) {
+                    button.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        console.log('Codex button clicked:', this.textContent);
+                        
+                        // Visual feedback
+                        const originalText = this.textContent;
+                        this.textContent = 'Clicked!';
+                        this.style.opacity = '0.7';
+                        
+                        setTimeout(() => {
+                            this.textContent = originalText;
+                            this.style.opacity = '1';
+                        }, 1000);
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<!-- ABOUTME: This file demonstrates Wikipedia mobile-style content suggestions interface using Codex design system. -->
+<!-- ABOUTME: It replicates the actual Wikipedia mobile UI for content translation suggestions with images and section counts. -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>पृष्ठ सुझाव</title>
+    
+    <!-- Wikimedia Codex CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@wikimedia/codex@1.5.0/dist/codex.style.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Lato, Helvetica, Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #202122;
+            line-height: 1.6;
+        }
+        
+        /* Header */
+        .header {
+            background-color: #ffffff;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #eaecf0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header h1 {
+            font-size: 18px;
+            font-weight: 400;
+            color: #202122;
+            margin: 0;
+        }
+        
+        .language-selector {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+        
+        .language-select {
+            border: 1px solid #a2a9b1;
+            border-radius: 2px;
+            padding: 4px 8px;
+            font-size: 14px;
+            color: #202122;
+            background: #ffffff;
+            cursor: pointer;
+        }
+        
+        .language-arrow {
+            color: #72777d;
+            font-size: 16px;
+        }
+        
+        /* Filter buttons */
+        .filters {
+            padding: 8px 16px;
+            display: flex;
+            gap: 6px;
+            background-color: #ffffff;
+            border-bottom: 1px solid #eaecf0;
+            overflow-x: auto;
+        }
+        
+        .filter-btn {
+            padding: 6px 12px;
+            border: 1px solid #a2a9b1;
+            border-radius: 16px;
+            background-color: #ffffff;
+            color: #202122;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            white-space: nowrap;
+            transition: all 0.15s ease;
+        }
+        
+        .filter-btn:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .filter-btn.active {
+            background-color: #36c;
+            color: #ffffff;
+            border-color: #36c;
+        }
+        
+        .filter-btn .icon {
+            font-size: 16px;
+        }
+        
+        /* Main content */
+        .content {
+            background-color: #f8f9fa;
+            min-height: calc(100vh - 120px);
+        }
+        
+        .section {
+            background-color: #ffffff;
+            margin-bottom: 8px;
+        }
+        
+        .section-header {
+            padding: 12px 16px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #54595d;
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #eaecf0;
+        }
+        
+        /* Suggestion items */
+        .suggestion-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 12px 16px;
+            background-color: #ffffff;
+            border-bottom: 1px solid #eaecf0;
+            cursor: pointer;
+            position: relative;
+            transition: background-color 0.15s ease;
+        }
+        
+        .suggestion-item:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+        
+        .suggestion-image {
+            width: 56px;
+            height: 56px;
+            border-radius: 2px;
+            object-fit: cover;
+            margin-right: 12px;
+            background-color: #eaecf0;
+            flex-shrink: 0;
+        }
+        
+        .suggestion-content {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .suggestion-title {
+            font-size: 15px;
+            font-weight: 400;
+            color: #202122;
+            margin-bottom: 3px;
+            line-height: 1.3;
+        }
+        
+        .suggestion-description {
+            font-size: 13px;
+            color: #54595d;
+            line-height: 1.4;
+            margin-bottom: 4px;
+        }
+        
+        .suggestion-meta {
+            font-size: 12px;
+            color: #72777d;
+        }
+        
+        .suggestion-meta.quick-translation {
+            color: #00af89;
+            font-weight: 500;
+        }
+        
+        .quick-translation {
+            color: #00af89;
+            font-weight: 500;
+        }
+        
+        .suggestion-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-left: 12px;
+            padding-top: 2px;
+        }
+        
+        .action-btn {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #72777d;
+            border-radius: 2px;
+            transition: all 0.15s ease;
+        }
+        
+        .action-btn:hover {
+            background-color: #eaecf0;
+            color: #202122;
+        }
+        
+        .action-btn.bookmarked {
+            color: #36c;
+        }
+        
+        /* No image placeholder */
+        .no-image {
+            width: 56px;
+            height: 56px;
+            background-color: #eaecf0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 2px;
+            margin-right: 12px;
+            flex-shrink: 0;
+            font-size: 11px;
+            font-weight: 600;
+            color: #72777d;
+        }
+        
+        .no-image.logo {
+            background-color: #000;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 700;
+        }
+        
+        /* Footer button */
+        .footer-action {
+            padding: 16px;
+            background-color: #ffffff;
+            text-align: center;
+            border-top: 1px solid #eaecf0;
+        }
+        
+        .footer-btn {
+            color: #36c;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: 2px;
+            transition: background-color 0.15s ease;
+        }
+        
+        .footer-btn:hover {
+            background-color: #f8f9fa;
+            text-decoration: none;
+        }
+        
+        /* SVG Icons */
+        .icon-svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+        
+        
+        /* Responsive */
+        @media (max-width: 640px) {
+            .header {
+                padding: 12px 16px;
+            }
+            
+            .header h1 {
+                font-size: 18px;
+            }
+            
+            .filters {
+                padding: 8px 16px;
+            }
+            
+            .suggestion-item {
+                padding: 12px 16px;
+            }
+            
+            .suggestion-image, .no-image {
+                width: 56px;
+                height: 56px;
+                margin-right: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="big-header" style="background-color: #ffffff; padding: 24px 16px; text-align: center; border-bottom: 1px solid #eaecf0;">
+        <h1 style="font-size: 36px; font-weight: 700; color: #202122; margin: 0;">Design - A</h1>
+    </div>
+    
+    <div class="header">
+        <h1>पृष्ठ सुझाव</h1>
+        <div class="language-selector">
+            <select class="language-select">
+                <option>English</option>
+                <option>हिंदी</option>
+            </select>
+            <span class="language-arrow">→</span>
+            <select class="language-select">
+                <option>हिंदी</option>
+                <option>English</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="filters">
+        <button class="filter-btn active">
+            <span class="icon">👤</span> For you
+        </button>
+        <button class="filter-btn">
+            <span class="icon">❤️</span> Popular
+        </button>
+        <button class="filter-btn">
+            <span class="icon">⚙️</span> अधिक
+        </button>
+    </div>
+    
+    <div class="content">
+        <div class="section">
+            <div class="section-header">Section translation suggestions</div>
+            
+            <div class="suggestion-item">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/9/98/John_Pemberton.jpg" 
+                     alt="John Stith Pemberton" class="suggestion-image" 
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="no-image" style="display: none;">
+                    <svg class="icon-svg" viewBox="0 0 20 20">
+                        <path d="M10 2a8 8 0 100 16 8 8 0 000-16zM8 8a2 2 0 114 0 2 2 0 01-4 0zm2 8a6 6 0 01-6-6 6 6 0 0112 0 6 6 0 01-6 6z"/>
+                    </svg>
+                </div>
+                <div class="suggestion-content">
+                    <h3 class="suggestion-title">John Stith Pemberton</h3>
+                    <p class="suggestion-description">American pharmacist, inventor of Coca-Cola (1831–1888)</p>
+                    <p class="suggestion-meta">8 sections • <span class="quick-translation">2 quick translations</span></p>
+                </div>
+                <div class="suggestion-actions">
+                    <button class="action-btn" aria-label="Dismiss">
+                        <svg class="icon-svg" viewBox="0 0 20 20">
+                            <path d="M15.5 5.5l-1-1L10 9l-4.5-4.5-1 1L9 10l-4.5 4.5 1 1L10 11l4.5 4.5 1-1L11 10l4.5-4.5z"/>
+                        </svg>
+                    </button>
+                    <button class="action-btn bookmark-btn" aria-label="Bookmark">
+                        <svg class="icon-svg" viewBox="0 0 20 20">
+                            <path d="M5 2h10v16l-5-3-5 3V2zm1 2v11.5l4-2.4 4 2.4V4H6z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="suggestion-item">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/7/7b/Tumbler_of_cola_with_ice.jpg" 
+                     alt="Soft drink" class="suggestion-image"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="no-image" style="display: none;">
+                    <svg class="icon-svg" viewBox="0 0 20 20">
+                        <path d="M3 4h14v2H3V4zm0 4h14v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z"/>
+                    </svg>
+                </div>
+                <div class="suggestion-content">
+                    <h3 class="suggestion-title">Soft drink</h3>
+                    <p class="suggestion-description">Sweetened non-alcoholic drink, often carbonated</p>
+                    <p class="suggestion-meta">11 sections • <span class="quick-translation">5 quick translations</span></p>
+                </div>
+                <div class="suggestion-actions">
+                    <button class="action-btn" aria-label="Dismiss">
+                        <svg class="icon-svg" viewBox="0 0 20 20">
+                            <path d="M15.5 5.5l-1-1L10 9l-4.5-4.5-1 1L9 10l-4.5 4.5 1 1L10 11l4.5 4.5 1-1L11 10l4.5-4.5z"/>
+                        </svg>
+                    </button>
+                    <button class="action-btn bookmark-btn" aria-label="Bookmark">
+                        <svg class="icon-svg" viewBox="0 0 20 20">
+                            <path d="M5 2h10v16l-5-3-5 3V2zm1 2v11.5l4-2.4 4 2.4V4H6z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="suggestion-item">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/a/a2/Bubble_Tea.png" 
+                     alt="Bubble tea" class="suggestion-image"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="no-image" style="display: none;">
+                    <svg class="icon-svg" viewBox="0 0 20 20">
+                        <circle cx="10" cy="10" r="8"/>
+                    </svg>
+                </div>
+                <div class="suggestion-content">
+                    <h3 class="suggestion-title">Bubble tea</h3>
+                    <p class="suggestion-description">Tea-based drink with chewy bubbles</p>
+                    <p class="suggestion-meta">7 sections • <span class="quick-translation">5 quick translations</span></p>
+                </div>
+                <div class="suggestion-actions">
+                    <button class="action-btn" aria-label="Dismiss">
+                        <svg class="icon-svg" viewBox="0 0 20 20">
+                            <path d="M15.5 5.5l-1-1L10 9l-4.5-4.5-1 1L9 10l-4.5 4.5 1 1L10 11l4.5 4.5 1-1L11 10l4.5-4.5z"/>
+                        </svg>
+                    </button>
+                    <button class="action-btn bookmark-btn" aria-label="Bookmark">
+                        <svg class="icon-svg" viewBox="0 0 20 20">
+                            <path d="M5 2h10v16l-5-3-5 3V2zm1 2v11.5l4-2.4 4 2.4V4H6z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-header">Create new pages</div>
+            
+            <div class="suggestion-item">
+                <div class="no-image logo">VIO</div>
+                <div class="suggestion-content">
+                    <h3 class="suggestion-title">Vio (drink)</h3>
+                    <p class="suggestion-description"></p>
+                    <p class="suggestion-meta quick-translation">Quick translation</p>
+                </div>
+                <div class="suggestion-actions">
+                    <button class="action-btn" aria-label="Dismiss">
+                        <svg class="icon-svg" viewBox="0 0 20 20">
+                            <path d="M15.5 5.5l-1-1L10 9l-4.5-4.5-1 1L9 10l-4.5 4.5 1 1L10 11l4.5 4.5 1-1L11 10l4.5-4.5z"/>
+                        </svg>
+                    </button>
+                    <button class="action-btn bookmark-btn" aria-label="Bookmark">
+                        <svg class="icon-svg" viewBox="0 0 20 20">
+                            <path d="M5 2h10v16l-5-3-5 3V2zm1 2v11.5l4-2.4 4 2.4V4H6z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="suggestion-item">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/1/1c/Joltcola1.png" 
+                     alt="Jolt Cola" class="suggestion-image"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="no-image" style="display: none;">
+                    <svg class="icon-svg" viewBox="0 0 20 20">
+                        <path d="M3 5v10h14V5H3zm2 2h10v6H5V7z"/>
+                    </svg>
+                </div>
+                <div class="suggestion-content">
+                    <h3 class="suggestion-title">Jolt Cola</h3>
+                    <p class="suggestion-description">Carbonated soft drink</p>
+                    <p class="suggestion-meta"></p>
+                </div>
+                <div class="suggestion-actions">
+                    <button class="action-btn" aria-label="Dismiss">
+                        <svg class="icon-svg" viewBox="0 0 20 20">
+                            <path d="M15.5 5.5l-1-1L10 9l-4.5-4.5-1 1L9 10l-4.5 4.5 1 1L10 11l4.5 4.5 1-1L11 10l4.5-4.5z"/>
+                        </svg>
+                    </button>
+                    <button class="action-btn bookmark-btn" aria-label="Bookmark">
+                        <svg class="icon-svg" viewBox="0 0 20 20">
+                            <path d="M5 2h10v16l-5-3-5 3V2zm1 2v11.5l4-2.4 4 2.4V4H6z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="suggestion-item">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/3/39/Japanese_Hot_Coffee_%2841619985121%29.jpg" 
+                     alt="Canned coffee" class="suggestion-image"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="no-image" style="display: none;">
+                    <svg class="icon-svg" viewBox="0 0 20 20">
+                        <path d="M3 4h14v12H3V4zm2 2v8h10V6H5z"/>
+                    </svg>
+                </div>
+                <div class="suggestion-content">
+                    <h3 class="suggestion-title">Canned coffee</h3>
+                    <p class="suggestion-description">Type of coffee drink</p>
+                    <p class="suggestion-meta quick-translation">Quick translation</p>
+                </div>
+                <div class="suggestion-actions">
+                    <button class="action-btn" aria-label="Dismiss">
+                        <svg class="icon-svg" viewBox="0 0 20 20">
+                            <path d="M15.5 5.5l-1-1L10 9l-4.5-4.5-1 1L9 10l-4.5 4.5 1 1L10 11l4.5 4.5 1-1L11 10l4.5-4.5z"/>
+                        </svg>
+                    </button>
+                    <button class="action-btn bookmark-btn" aria-label="Bookmark">
+                        <svg class="icon-svg" viewBox="0 0 20 20">
+                            <path d="M5 2h10v16l-5-3-5 3V2zm1 2v11.5l4-2.4 4 2.4V4H6z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-action">
+            <a href="#" class="footer-btn">
+                <svg class="icon-svg" viewBox="0 0 20 20">
+                    <path d="M15.65 4.35A8 8 0 1 0 17.4 13h-2.22a6 6 0 1 1-1.06-6.66L12 8.5 9.5 6l8-2-2 8z"/>
+                </svg>
+                सुझावों को ताज़ा करें
+            </a>
+        </div>
+    </div>
+    
+    <script>
+        // Handle bookmark buttons
+        document.querySelectorAll('.bookmark-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                this.classList.toggle('bookmarked');
+                if (this.classList.contains('bookmarked')) {
+                    this.innerHTML = '<svg class="icon-svg" viewBox="0 0 20 20"><path d="M5 2h10v16l-5-3-5 3V2z"/></svg>';
+                } else {
+                    this.innerHTML = '<svg class="icon-svg" viewBox="0 0 20 20"><path d="M5 2h10v16l-5-3-5 3V2zm1 2v11.5l4-2.4 4 2.4V4H6z"/></svg>';
+                }
+            });
+        });
+        
+        // Handle dismiss buttons
+        document.querySelectorAll('.action-btn:not(.bookmark-btn)').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const item = this.closest('.suggestion-item');
+                item.style.opacity = '0.5';
+                setTimeout(() => {
+                    item.remove();
+                }, 200);
+            });
+        });
+        
+        // Section data for different articles
+        const articleSections = {
+            'John Stith Pemberton': [
+                'Background',
+                'Personal life', 
+                'Founding Coca-Cola',
+                'Pemberton sells the business',
+                'Death',
+                'References',
+                'Further reading',
+                'External links'
+            ],
+            'Soft drink': [
+                'History',
+                'Production',
+                'Ingredients',
+                'Health effects',
+                'Marketing',
+                'Environmental impact',
+                'See also',
+                'References'
+            ],
+            'Bubble tea': [
+                'History',
+                'Preparation',
+                'Varieties',
+                'Cultural impact',
+                'Health considerations',
+                'References',
+                'External links'
+            ]
+        };
+        
+        // Handle suggestion item clicks - navigate to section comparison
+        // Only add click handlers to "Expand with new sections" items
+        const expandSection = document.querySelector('.section:first-of-type');
+        const expandItems = expandSection.querySelectorAll('.suggestion-item');
+        
+        expandItems.forEach(item => {
+            item.addEventListener('click', function() {
+                const title = this.querySelector('.suggestion-title').textContent;
+                const encodedTitle = encodeURIComponent(title);
+                window.location.href = `section-comparison.html?article=${encodedTitle}`;
+            });
+        });
+        
+        // Remove hover effects from "Create new pages" items
+        const createSection = document.querySelector('.section:last-of-type');
+        const createItems = createSection.querySelectorAll('.suggestion-item');
+        
+        createItems.forEach(item => {
+            item.style.cursor = 'default';
+            item.addEventListener('mouseenter', function() {
+                this.style.backgroundColor = '#ffffff';
+            });
+        });
+        
+        // Handle filter buttons
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+        
+        // Handle refresh button
+        document.querySelector('.footer-btn').addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('Refresh suggestions clicked');
+        });
+        
+    </script>
+</body>
+</html>
